@@ -1,6 +1,6 @@
 ﻿namespace MediaViewerNET
 {
-    partial class Form1
+    partial class ImageViewerNET
     {
         /// <summary>
         ///  Required designer variable.
@@ -34,6 +34,7 @@
             openFolderToolStripMenuItem = new ToolStripMenuItem();
             main_picture = new PictureBox();
             flowLayoutPanel = new FlowLayoutPanel();
+            exifData = new TextBox();
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)main_picture).BeginInit();
             SuspendLayout();
@@ -71,9 +72,9 @@
             // main_picture
             // 
             main_picture.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            main_picture.Location = new Point(455, 24);
+            main_picture.Location = new Point(455, 27);
             main_picture.Name = "main_picture";
-            main_picture.Size = new Size(403, 476);
+            main_picture.Size = new Size(391, 325);
             main_picture.SizeMode = PictureBoxSizeMode.Zoom;
             main_picture.TabIndex = 2;
             main_picture.TabStop = false;
@@ -87,17 +88,32 @@
             flowLayoutPanel.Size = new Size(449, 476);
             flowLayoutPanel.TabIndex = 4;
             // 
-            // Form1
+            // exifData
+            // 
+            exifData.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            exifData.BackColor = SystemColors.Window;
+            exifData.BorderStyle = BorderStyle.FixedSingle;
+            exifData.ForeColor = SystemColors.InfoText;
+            exifData.HideSelection = false;
+            exifData.Location = new Point(455, 358);
+            exifData.Multiline = true;
+            exifData.Name = "exifData";
+            exifData.ReadOnly = true;
+            exifData.Size = new Size(391, 142);
+            exifData.TabIndex = 5;
+            // 
+            // ImageViewerNET
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(858, 507);
+            Controls.Add(exifData);
             Controls.Add(flowLayoutPanel);
             Controls.Add(main_picture);
             Controls.Add(menuStrip1);
             MainMenuStrip = menuStrip1;
-            Name = "Form1";
-            Text = "Form1";
+            Name = "ImageViewerNET";
+            Text = "ImageViewerNET";
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)main_picture).EndInit();
@@ -113,5 +129,6 @@
         private ToolStripMenuItem openFolderToolStripMenuItem;
         private PictureBox main_picture;
         private FlowLayoutPanel flowLayoutPanel;
+        private TextBox exifData;
     }
 }

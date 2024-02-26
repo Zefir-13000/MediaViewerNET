@@ -1,10 +1,14 @@
+using System.Drawing.Imaging;
+using System.IO;
+using System.Text;
 using System.Windows.Forms;
+using System.Windows.Media.Imaging;
 
 namespace MediaViewerNET
 {
-    public partial class Form1 : Form
+    public partial class ImageViewerNET : Form
     {
-        public Form1()
+        public ImageViewerNET()
         {
             InitializeComponent();
             this.MinimumSize = new Size(this.Width, this.Height);
@@ -14,6 +18,61 @@ namespace MediaViewerNET
         {
             this.AutoSize = true;
             this.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+        }
+
+        private void BuildExifData(string filename, System.Drawing.Image image, BitmapMetadata md, out string exifData)
+        {
+            string exifDataText = $"Name: {filename}{Environment.NewLine}";
+
+            exifDataText += $"Width: {image.Width}{Environment.NewLine}";
+            exifDataText += $"Height: {image.Height}{Environment.NewLine}";
+            exifDataText += $"Horizontal Resolution: {image.HorizontalResolution}{Environment.NewLine}";
+            exifDataText += $"Vectical Resolution: {image.VerticalResolution}{Environment.NewLine}";
+
+            try
+            {
+                if (!string.IsNullOrEmpty(md.Title))
+                    exifDataText += $"Title: {md.Title}{Environment.NewLine}";
+            }
+            catch { }
+            try
+            {
+                if (!string.IsNullOrEmpty(md.Subject))
+                    exifDataText += $"Subject: {md.Subject}{Environment.NewLine}";
+            }
+            catch { }
+            try
+            {
+                if (md.Rating > 0)
+                    exifDataText += $"Rating: {md.Rating}{Environment.NewLine}";
+            }
+            catch { }
+            try
+            {
+                if (!string.IsNullOrEmpty(md?.Comment))
+                    exifDataText += $"Comment: {md.Comment}{Environment.NewLine}";
+            }
+            catch { }
+            try
+            {
+                if (!string.IsNullOrEmpty(md.DateTaken))
+                    exifDataText += $"DateTaken: {md.DateTaken}{Environment.NewLine}";
+            }
+            catch { }
+            try
+            {
+                if (!string.IsNullOrEmpty(md.Format))
+                    exifDataText += $"Format: {md.Format}{Environment.NewLine}";
+            }
+            catch { }
+            try
+            {
+                if (!string.IsNullOrEmpty(md.Location) && md?.Location != "/")
+                    exifDataText += $"Location: {md.Location}{Environment.NewLine}";
+            }
+            catch { }
+
+            exifData = exifDataText;
         }
 
         private void openFileToolStripMenuItem_Click(object sender, EventArgs e)
@@ -32,7 +91,18 @@ namespace MediaViewerNET
             }
 
             string selectedFileName = openFileDialog.FileName;
-            main_picture.Image = Image.FromFile(selectedFileName);
+            main_picture.Image = System.Drawing.Image.FromFile(selectedFileName);
+            
+            string exifDataText = "";
+            using (FileStream fs = new FileStream(selectedFileName, FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
+                BitmapSource img = BitmapFrame.Create(fs);
+                BitmapMetadata md = (BitmapMetadata)img.Metadata;
+                BuildExifData(openFileDialog.SafeFileName, main_picture.Image, md, out exifDataText);
+            }
+
+            exifData.Clear();
+            exifData.AppendText(exifDataText);
         }
 
         private void openFolderToolStripMenuItem_Click(object sender, EventArgs e)
@@ -53,9 +123,10 @@ namespace MediaViewerNET
             foreach (FileInfo pic in pics)
             {
                 Button cb = new Button();
+                cb.Name = pic.FullName;
                 cb.Size = new Size(128, 128);
                 cb.BackgroundImageLayout = ImageLayout.Zoom;
-                cb.BackgroundImage = Image.FromFile(pic.FullName);
+                cb.BackgroundImage = System.Drawing.Image.FromFile(pic.FullName);
                 cb.Click += new System.EventHandler(ImageButton_Click);
                 flowLayoutPanel.Controls.Add(cb);
             }
@@ -65,6 +136,16 @@ namespace MediaViewerNET
         {
             Button? btn = sender as Button;
             main_picture.Image = btn?.BackgroundImage;
+            string exifDataText = "";
+            using (FileStream fs = new FileStream(btn.Name, FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
+                BitmapSource img = BitmapFrame.Create(fs);
+                BitmapMetadata md = (BitmapMetadata)img.Metadata;
+                BuildExifData(fs.Name.Split("\\").Last(), main_picture.Image, md, out exifDataText);
+            }
+
+            exifData.Clear();
+            exifData.AppendText(exifDataText);
         }
 
         private void Form1_ResizeEnd(object sender, EventArgs e)
