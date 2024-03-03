@@ -446,7 +446,7 @@ namespace MediaViewerNET
                 _beginEditData = null;
                 return;
             }
-            if (e.RowIndex == 3 || e.RowIndex == 7 || e.RowIndex == 8)
+            if (e.RowIndex == 3 || e.RowIndex == 7 || e.RowIndex == 8 || e.RowIndex == 10)
             {
                 foreach (CheckBox cb in _activeCheckBoxes)
                 {
@@ -460,6 +460,8 @@ namespace MediaViewerNET
                         prop_item.Id = (int)ExifTags.CameraMaker;
                     else if (e.RowIndex == 8)
                         prop_item.Id = (int)ExifTags.CameraModel;
+                    else if (e.RowIndex == 10)
+                        prop_item.Id = (int)ExifTags.Copyright;
                     string changedCell = (string)dataGridView.Rows[e.RowIndex].Cells[1].Value;
                     prop_item.Value = Encoding.UTF8.GetBytes(changedCell);
                     prop_item.Len = prop_item.Value.Length > 0 ? Encoding.UTF8.GetByteCount(changedCell) + 1 : 0;
