@@ -39,6 +39,7 @@ namespace MediaViewerNET
             dataGridView.Rows.Add("Camera Maker", "");
             dataGridView.Rows.Add("Camera Model", "");
             dataGridView.Rows[dataGridView.Rows.Add("Format", "")].ReadOnly = true;
+            dataGridView.Rows.Add("Copyright", "");
         }
 
         private void BuildExifData(string filename, Image image, bool ctrlPressed = false)
@@ -64,6 +65,7 @@ namespace MediaViewerNET
                 string prevCameraMaker = null;
                 string prevCameraModel = null;
                 string prevFormat = null;
+                string prevCopyright = null;
                 foreach (CheckBox cb in _activeCheckBoxes)
                 {
                     if (prevFilename == null)
@@ -126,6 +128,19 @@ namespace MediaViewerNET
                     }
                     if (prevFormat == null)
                         prevFormat = new ImageFormatConverter().ConvertToString(cb.BackgroundImage.RawFormat);
+                    if (prevCopyright == null)
+                    {
+                        if (cb.BackgroundImage.PropertyIdList.Contains((int)ExifTags.Copyright))
+                        {
+                            PropertyItem? prop_item = cb.BackgroundImage.GetPropertyItem((int)ExifTags.Copyright);
+                            prevCopyright = Encoding.UTF8.GetString(prop_item.Value, 0, prop_item.Len);
+                        }
+                        else
+                        {
+                            prevCopyright = "null";
+                        }
+                    }
+
 
                     dataGridView.Rows[0].Cells[1].Value = cb.Name;
                     if (prevFilename != cb.Name)
@@ -223,6 +238,22 @@ namespace MediaViewerNET
                         dataGridView.Rows[9].Cells[1].Value = "(different values)";
                         dataGridView.Rows[9].DefaultCellStyle = boldStyle;
                     }
+                    if (cb.BackgroundImage.PropertyIdList.Contains((int)ExifTags.Copyright))
+                    {
+                        PropertyItem? prop_item = cb.BackgroundImage.GetPropertyItem((int)ExifTags.Copyright);
+                        string Copyright = Encoding.UTF8.GetString(prop_item.Value, 0, prop_item.Len);
+                        dataGridView.Rows[10].Cells[1].Value = Copyright;
+                        if (Copyright != prevCopyright)
+                        {
+                            dataGridView.Rows[10].Cells[1].Value = "(different values)";
+                            dataGridView.Rows[10].DefaultCellStyle = boldStyle;
+                        }
+                    }
+                    else if (prevCopyright != null)
+                    {
+                        dataGridView.Rows[10].Cells[1].Value = "(different values)";
+                        dataGridView.Rows[10].DefaultCellStyle = boldStyle;
+                    }
                 }
             }
             else
@@ -254,6 +285,11 @@ namespace MediaViewerNET
                     dataGridView.Rows[8].Cells[1].Value = Encoding.UTF8.GetString(prop_item.Value, 0, prop_item.Len);
                 }
                 dataGridView.Rows[9].Cells[1].Value = new ImageFormatConverter().ConvertToString(image.RawFormat);
+                if (image.PropertyIdList.Contains((int)ExifTags.Copyright))
+                {
+                    PropertyItem? prop_item = image.GetPropertyItem((int)ExifTags.Copyright);
+                    dataGridView.Rows[10].Cells[1].Value = Encoding.UTF8.GetString(prop_item.Value, 0, prop_item.Len);
+                }
             }
         }
 

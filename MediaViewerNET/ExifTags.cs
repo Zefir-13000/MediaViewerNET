@@ -12,5 +12,6 @@ namespace MediaViewerNET
         CameraMaker = 0x010F,
         CameraModel = 0x0110,
         Rating = 0x4746,
+        Copyright = 0x8298,
     }
 }
