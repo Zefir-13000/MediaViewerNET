@@ -34,9 +34,12 @@
             openFolderToolStripMenuItem = new ToolStripMenuItem();
             main_picture = new PictureBox();
             flowLayoutPanel = new FlowLayoutPanel();
-            exifData = new TextBox();
+            dataGridView = new DataGridView();
+            Property = new DataGridViewTextBoxColumn();
+            Value = new DataGridViewTextBoxColumn();
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)main_picture).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dataGridView).BeginInit();
             SuspendLayout();
             // 
             // menuStrip1
@@ -88,26 +91,43 @@
             flowLayoutPanel.Size = new Size(449, 476);
             flowLayoutPanel.TabIndex = 4;
             // 
-            // exifData
+            // dataGridView
             // 
-            exifData.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            exifData.BackColor = SystemColors.Window;
-            exifData.BorderStyle = BorderStyle.FixedSingle;
-            exifData.ForeColor = SystemColors.InfoText;
-            exifData.HideSelection = false;
-            exifData.Location = new Point(455, 358);
-            exifData.Multiline = true;
-            exifData.Name = "exifData";
-            exifData.ReadOnly = true;
-            exifData.Size = new Size(391, 142);
-            exifData.TabIndex = 5;
+            dataGridView.AllowUserToAddRows = false;
+            dataGridView.AllowUserToDeleteRows = false;
+            dataGridView.AllowUserToResizeRows = false;
+            dataGridView.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            dataGridView.Columns.AddRange(new DataGridViewColumn[] { Property, Value });
+            dataGridView.Location = new Point(455, 358);
+            dataGridView.Name = "dataGridView";
+            dataGridView.RowHeadersVisible = false;
+            dataGridView.Size = new Size(391, 142);
+            dataGridView.TabIndex = 6;
+            dataGridView.CellBeginEdit += dataGridView_CellBeginEdit;
+            dataGridView.CellEndEdit += dataGridView_CellEdited;
+            // 
+            // Property
+            // 
+            Property.HeaderText = "Property";
+            Property.MinimumWidth = 100;
+            Property.Name = "Property";
+            Property.ReadOnly = true;
+            Property.SortMode = DataGridViewColumnSortMode.NotSortable;
+            // 
+            // Value
+            // 
+            Value.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            Value.HeaderText = "Value";
+            Value.Name = "Value";
+            Value.SortMode = DataGridViewColumnSortMode.NotSortable;
             // 
             // ImageViewerNET
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(858, 507);
-            Controls.Add(exifData);
+            Controls.Add(dataGridView);
             Controls.Add(flowLayoutPanel);
             Controls.Add(main_picture);
             Controls.Add(menuStrip1);
@@ -117,6 +137,7 @@
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)main_picture).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dataGridView).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -129,6 +150,8 @@
         private ToolStripMenuItem openFolderToolStripMenuItem;
         private PictureBox main_picture;
         private FlowLayoutPanel flowLayoutPanel;
-        private TextBox exifData;
+        private DataGridView dataGridView;
+        private DataGridViewTextBoxColumn Property;
+        private DataGridViewTextBoxColumn Value;
     }
 }
